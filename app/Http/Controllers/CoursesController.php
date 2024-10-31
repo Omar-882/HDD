@@ -7,7 +7,7 @@ use App\Models\courses;
 use Auth;
 class CoursesController extends Controller
 {
-    public function index(){
+    public function index(){//test
 
         if(str_contains(url()->current(),"api"))
         {
