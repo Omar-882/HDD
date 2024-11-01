@@ -9,7 +9,6 @@ use App\Http\Middleware\EnsureTokenIsValid;
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
-
 Route::post('/login', [UsersController::class, 'login'])->name('Login');
 Route::post('/register', [UsersController::class, 'register'])->name('register');
 
@@ -26,10 +25,11 @@ Route::post('/courses/edit', [CoursesController::class, 'update'])->name('EditCo
 //Users Api
 Route::get('/users', [UsersController::class, 'index'])->name('Users');
 Route::get('/users/show', [UsersController::class, 'show'])->name('ShowUser');
-Route::post('/users/add', [UsersController::class, 'add'])->name('AddUser');//Not used yet and not added to postman
 Route::post('/users/edit', [UsersController::class, 'update'])->name('EditUser');
 Route::post('/users/delete', [UsersController::class, 'delete'])->name('DeleteUser');
 Route::post('/users/restore', [UsersController::class, 'restore'])->name('RestoreUser');
+Route::post('/users/add-user-for-admin', [UsersController::class, 'add'])->name('AddUserForAdmin');
+Route::post('/users/changerole', [UsersController::class, 'changeRole'])->name('changeRole');
 
 //Course Registeration Api
 Route::get('/registerd-coureses/allPendings', [CouresRegisertController::class, 'GetAllPendings'])->name('AllPendings');
@@ -39,6 +39,5 @@ Route::post('/registerd-coureses/add-payment', [CouresRegisertController::class,
 Route::get('/registerd-coureses/all-payments', [CouresRegisertController::class, 'GetAllPayments'])->name('GetAllPayments');
 Route::get('/registerd-coureses/student-payments', [CouresRegisertController::class, 'GetAllPaymentsForAStudent'])->name('GetAllPaymentsForAStudent');
 
-Route::get('/test1', [UsersController::class, 'testGet'])->name('test1');
-Route::post('/test2', [UsersController::class, 'testPost'])->name('test2');
+
 });

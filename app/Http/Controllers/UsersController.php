@@ -55,11 +55,10 @@ class UsersController extends Controller
             $user->F_name=$requset->f_name;
             $user->L_name=$requset->l_name;
             $user->phone=$requset->phone;
-            $user->birthdate=$requset->birthdate;
+            $user->birthdate=$requset->bday;
             $user->gender=$requset->gender;
             $user->email=$requset->email;
-            $user->password=$requset->password;
-            // if(Auth::user()->hasPermission('changeRole'))s
+            $user->password=Hash::make($requset->password);
             $user->role=$requset->role;//
             $user->save();
 
@@ -71,11 +70,10 @@ class UsersController extends Controller
             $user->F_name=$requset->f_name;
             $user->L_name=$requset->l_name;
             $user->phone=$requset->phone;
-            $user->birthdate=$requset->birthdate;
+            $user->birthdate=$requset->bday;
             $user->gender=$requset->gender;
             $user->email=$requset->email;
-            $user->password=$requset->password;
-            // if(Auth::user()->hasPermission('changeRole'))s
+            $user->password=Hash::make($requset->password);
             $user->role=$requset->role;//
             $user->save();
             return redirect('/users');
@@ -108,7 +106,29 @@ class UsersController extends Controller
             return view('userProfile',["user"=>$user]);
         }
     }
-
+    public function changeRole(Request $requset)
+    {
+        $user = Auth::user();
+        if(!$user)
+        {
+         return response([
+          'message' => 'Unauthorized'
+         ], 401 );
+        }
+        $WantedForChange = User::find($requset->UserID);
+        if(!$WantedForChange)
+        {
+        return response([
+            'message' => 'User Not Found'
+            ], 404 );
+        }
+        else
+        {
+            $WantedForChange->role = $requset->role;
+            $WantedForChange->save();
+            return response(['message'=>"Role Changed!.",'data'=>$WantedForChange] , 200);
+        }
+    }
     public function update (Request $requset){
         if(str_contains(url()->current(),"api"))
         {
@@ -128,7 +148,8 @@ class UsersController extends Controller
                 $user->birthdate=$requset->bday;
                 $user->gender=$requset->gender;
                 $user->email=$requset->email;
-                $user->password=$requset->password;
+                $user->role=$requset->role;
+                $user->password=Hash::make($requset->password);
                 $user->save();
                 return response(['data'=>$user] , 200);
             }
@@ -148,7 +169,8 @@ class UsersController extends Controller
             $user->birthdate=$requset->bday;
             $user->gender=$requset->gender;
             $user->email=$requset->email;
-            $user->password=$requset->password;
+            $user->role=$requset->role;
+            $user->password=Hash::make($requset->password);
             $user->save();
             return redirect()->back();
         }
@@ -261,7 +283,7 @@ class UsersController extends Controller
             'F_name' => $request->f_name,
             'L_name' => $request->l_name,
             'birthdate' => $request->bday,
-            'gender' => $request->gender,
+            'gender' => "$request->gender",
             'phone' => $request->phone,
             'email' => $request->email,
             'password' => Hash::make($request->password),
@@ -287,13 +309,5 @@ class UsersController extends Controller
         return [
             'message' => 'user logged out'
         ];
-    }
-    public function testGet(Request $request)
-    {
-        return response($request);
-    }
-    public function testPost(Request $request)
-    {
-        return response($request);
     }
 }
