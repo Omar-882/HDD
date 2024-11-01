@@ -296,4 +296,8 @@ class UsersController extends Controller
     {
         return response($request);
     }
+    public function testPostw(Request $request)
+    {
+        return response($request);
+    }
 }
