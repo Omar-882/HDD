@@ -42,5 +42,4 @@ Route::get('/registerd-coureses/student-payments', [CouresRegisertController::cl
 
 Route::get('/test1', [UsersController::class, 'testGet'])->name('test1');
 Route::post('/test2', [UsersController::class, 'testPost'])->name('test2');
-
 });
