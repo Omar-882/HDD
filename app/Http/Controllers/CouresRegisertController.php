@@ -98,6 +98,17 @@ class CouresRegisertController extends Controller
         }
         $CheckIfExist->approval = $request->decision;
         $CheckIfExist->save();
+        if($request->decision == "approved")
+        {
+            $newPayment = new payments();
+            $newPayment->st_id = $user->id;
+            $newPayment->amount = $course->price;
+            $newPayment->type = "Invoice";
+            $newPayment->user_id = $user->id;
+            $newPayment->save();
+            $user->wallet -= $course->price;
+            $user->save();
+        }
         if(str_contains(url()->current(),"api"))
         {
             return response(['message'=>'Course Registeration Has Been '.$request->decision,'UserFirstName'=>$user->F_name,
@@ -108,5 +119,45 @@ class CouresRegisertController extends Controller
             return response(['message'=>'Course Registeration Has Been '.$request->decision,'UserFirstName'=>$user->F_name,
             "UserLastName"=>$user->L_name ], 200);//change this to return view
         }
+    }
+    public function addPayment(request $request)
+    {
+        $Student = User::find($request->StudentID);
+        if(!$Student)
+        {
+            return response(['message'=>'Student Not Found'] , 404);
+        }
+        $newPayment = new payments();
+        $newPayment->st_id = $Student->id;
+        $newPayment->amount = $request->ammount;
+        $newPayment->type = "Payment";
+        $newPayment->user_id = Auth::user()->id;
+        $newPayment->save();
+        $Student->wallet += $request->ammount;
+        $Student->save();
+        if(str_contains(url()->current(),"api"))
+        {
+            return response(['message'=>'Payment has been Added.','StudentFirstName'=>$Student->F_name,
+            "StudentLastName"=>$Student->L_name , 'Ammount'=>$request->ammount], 200);
+        }
+        else
+        {
+            return response(['message'=>'Payment has been Added.','StudentFirstName'=>$Student->F_name,
+            "StudentLastName"=>$Student->L_name , 'Ammount'=>$request->ammount], 200);//change this to return view
+        }
+    }
+
+    public function GetAllPayments()
+    {
+        $payments = payments::all();
+        return response(['data'=>$payments] , 200);
+    }
+    public function GetAllPaymentsForAStudent(Request $request)
+    {
+        $payments = payments::where('st_id',$request->StudentID)->get();
+        if(!$payments->isEmpty())
+        return response(['data'=>$payments] , 200);
+        else
+        return response(['message'=>"Student Not found."] , 404);
     }
 }

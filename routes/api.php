@@ -35,6 +35,9 @@ Route::post('/users/restore', [UsersController::class, 'restore'])->name('Restor
 Route::get('/registerd-coureses/allPendings', [CouresRegisertController::class, 'GetAllPendings'])->name('AllPendings');
 Route::post('/registerd-coureses/register-new-course', [CouresRegisertController::class, 'RegisterCourse'])->name('RegisterCourse');
 Route::post('/registerd-coureses/change-Approval-Status', [CouresRegisertController::class, 'changeApprovalStatus'])->name('changeApprovalStatus');
+Route::post('/registerd-coureses/add-payment', [CouresRegisertController::class, 'addPayment'])->name('addPayment');
+Route::get('/registerd-coureses/all-payments', [CouresRegisertController::class, 'GetAllPayments'])->name('GetAllPayments');
+Route::get('/registerd-coureses/student-payments', [CouresRegisertController::class, 'GetAllPaymentsForAStudent'])->name('GetAllPaymentsForAStudent');
 
 
 });
