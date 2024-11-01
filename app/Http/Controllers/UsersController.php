@@ -298,11 +298,6 @@ class UsersController extends Controller
         ];
         return response($response , 200);
     }
-
-
-
-
-
     public function Logout (Request $request)
     {
         auth()->user()->currentAccessToken()->delete();
