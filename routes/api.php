@@ -9,7 +9,6 @@ use App\Http\Middleware\EnsureTokenIsValid;
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
-Route::get('/test1', [UsersController::class, 'testGet'])->name('test1');
 
 Route::post('/login', [UsersController::class, 'login'])->name('Login');
 Route::post('/register', [UsersController::class, 'register'])->name('register');
