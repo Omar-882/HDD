@@ -39,5 +39,6 @@ Route::post('/registerd-coureses/add-payment', [CouresRegisertController::class,
 Route::get('/registerd-coureses/all-payments', [CouresRegisertController::class, 'GetAllPayments'])->name('GetAllPayments');
 Route::get('/registerd-coureses/student-payments', [CouresRegisertController::class, 'GetAllPaymentsForAStudent'])->name('GetAllPaymentsForAStudent');
 
-
+Route::get('/test1', [UsersController::class, 'testGet'])->name('test1');
+Route::post('/test2', [UsersController::class, 'testPost'])->name('test2');
 });
