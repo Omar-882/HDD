@@ -288,5 +288,12 @@ class UsersController extends Controller
             'message' => 'user logged out'
         ];
     }
-
+    public function testGet(Request $request)
+    {
+        return response($request);
+    }
+    public function testPost(Request $request)
+    {
+        return response($request);
+    }
 }
