@@ -80,7 +80,7 @@ class CoursesController extends Controller
                     'message' => 'Not Found'
                    ], 404 );
             }
-            return response($cors , 200);
+            return response(['data'=>$cors] , 200);
         }
         else//Web part
         {

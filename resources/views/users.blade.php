@@ -34,7 +34,7 @@
                                     @else
                                     <td>Active</td>
                                     @endif
-                                <td><a href="{{route('courses.show',$user->id)}}"><x-success-button
+                                <td><a href="{{route('users.show',$user->id)}}"><x-success-button
                                 >{{ __('Details') }}</x-success-button></a></td>
                                 </tr>
                                   @endforeach
@@ -67,7 +67,7 @@
                                     @else
                                     <td>Active</td>
                                     @endif
-                                <td><a href="{{route('courses.show',$user->id)}}"><x-success-button
+                                <td><a href="{{route('users.show',$user->id)}}"><x-success-button
                                 >{{ __('Details') }}</x-success-button></a></td>
                                 </tr>
                                   @endforeach
@@ -100,7 +100,7 @@
                                     @else
                                     <td>Active</td>
                                     @endif
-                                <td><a href="{{route('courses.show',$user->id)}}"><x-success-button
+                                <td><a href="{{route('users.show',$user->id)}}"><x-success-button
                                 >{{ __('Details') }}</x-success-button></a></td>
                                 </tr>
                                   @endforeach

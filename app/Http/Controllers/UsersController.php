@@ -13,48 +13,212 @@ use Illuminate\Auth\Events\Registered;
 class UsersController extends Controller
 {
     public function index(){
-        $user=User::all();
-        $Students= $user->where('role','Student');
-        $Coches= $user->where('role','coches');
-        $user =$user->where('role','Admin');
+        if(str_contains(url()->current(),"api"))
+        {
+        $user = Auth::user();
+            if(!$user)
+            {
+             return response([
+              'message' => 'Unauthorized'
+             ], 401 );
+            }
+            $user=User::all();
+            $Students= $user->where('role','Student');
+            $Coches= $user->where('role','coches');
+            $user =$user->where('role','Admin');
+            return response(['Students'=>$Students , 'Coches'=>$Coches , "Admins"=>$user] , 200);
+        }
+        else
+        {
+            $user=User::all();
+            $Students= $user->where('role','Student');
+            $Coches= $user->where('role','coches');
+            $user =$user->where('role','Admin');
+            return view ('users',['c'=>$user,'s'=>$Students,'ch'=>$Coches]);
+        }
 
-        return view ('users',['c'=>$user,'s'=>$Students,'ch'=>$Coches]);
+
+
     }
 
-    public function add(Request $requset){
-        $user=new User();
-        $user->F_name=$requset->f_name;
-        $user->L_name=$requset->l_name;
-        $user->phone=$requset->phone;
-        $user->birthdate=$requset->birthdate;
-        $user->gender=$requset->gender;
-        $user->email=$requset->email;
-        $user->password=$requset->password;
-        // if(Auth::user()->hasPermission('changeRole'))s
-        $user->role=$requset->role;//
-        $user->save();
-        return redirect('/users');
+    public function add(Request $requset){//Not used yet
+        if(str_contains(url()->current(),"api"))
+        {
+        $user = Auth::user();
+            if(!$user)
+            {
+             return response([
+              'message' => 'Unauthorized'
+             ], 401 );
+            }
+            $user=new User();
+            $user->F_name=$requset->f_name;
+            $user->L_name=$requset->l_name;
+            $user->phone=$requset->phone;
+            $user->birthdate=$requset->birthdate;
+            $user->gender=$requset->gender;
+            $user->email=$requset->email;
+            $user->password=$requset->password;
+            // if(Auth::user()->hasPermission('changeRole'))s
+            $user->role=$requset->role;//
+            $user->save();
+
+            return response(['message'=>"New Account Created", 'user'=>$user] , 200);
+        }
+        else
+        {
+            $user=new User();
+            $user->F_name=$requset->f_name;
+            $user->L_name=$requset->l_name;
+            $user->phone=$requset->phone;
+            $user->birthdate=$requset->birthdate;
+            $user->gender=$requset->gender;
+            $user->email=$requset->email;
+            $user->password=$requset->password;
+            // if(Auth::user()->hasPermission('changeRole'))s
+            $user->role=$requset->role;//
+            $user->save();
+            return redirect('/users');
+        }
+
+
     }
 
-    public function show ($id){
-        $user = User::findorfail($id);
-        return view('userProfile',["user"=>$user]);
-
+    public function show (request $request){
+        if(str_contains(url()->current(),"api"))
+        {
+        $user = Auth::user();
+            if(!$user)
+            {
+             return response([
+              'message' => 'Unauthorized'
+             ], 401 );
+            }
+            $user = User::find($request->id);
+            if($user)
+            return response(['data'=>$user] , 200);
+            else
+            return response([
+                'message' => 'Not Found'
+               ], 404 );
+        }
+        else
+        {
+            $user = User::findorfail($request->id);
+            return view('userProfile',["user"=>$user]);
+        }
     }
 
+    public function update (Request $requset){
+        if(str_contains(url()->current(),"api"))
+        {
+        $user = Auth::user();
+            if(!$user)
+            {
+             return response([
+              'message' => 'Unauthorized'
+             ], 401 );
+            }
+            $user = User::find($requset->id);
+            if($user)
+            {
+                $user->F_name=$requset->f_name;
+                $user->L_name=$requset->l_name;
+                $user->phone=$requset->phone;
+                $user->birthdate=$requset->bday;
+                $user->gender=$requset->gender;
+                $user->email=$requset->email;
+                $user->password=$requset->password;
+                $user->save();
+                return response(['data'=>$user] , 200);
+            }
+            else
+            {
+                return response([
+                    'message' => 'Not Found'
+                   ], 404 );
+            }
+        }
+        else
+        {
+            $user = User::findorfail($id);
+            $user->F_name=$requset->f_name;
+            $user->L_name=$requset->l_name;
+            $user->phone=$requset->phone;
+            $user->birthdate=$requset->bday;
+            $user->gender=$requset->gender;
+            $user->email=$requset->email;
+            $user->password=$requset->password;
+            $user->save();
+            return redirect()->back();
+        }
 
-    public function update (Request $requset,$id){
-        $user = User::findorfail($id);
-        $user->F_name=$requset->f_name;
-        $user->L_name=$requset->l_name;
-        $user->phone=$requset->phone;
-        $user->birthdate=$requset->birthdate;
-        $user->gender=$requset->gender;
-        $user->email=$requset->email;
-        $user->password=$requset->password;
-        $user->is_deleted=$requset->isDeleted;
-        $user->save();
-        return redirect()->back();
+    }
+    public function delete (Request $requset){
+        if(str_contains(url()->current(),"api"))
+        {
+        $user = Auth::user();
+            if(!$user)
+            {
+             return response([
+              'message' => 'Unauthorized'
+             ], 401 );
+            }
+            $user = User::find($requset->id);
+            if($user)
+            {
+                $user->is_deleted=1;
+                $user->save();
+                return response(['message'=>'Deleted!','user'=>$user] , 200);
+            }
+            else
+            {
+                return response([
+                    'message' => 'Not Found'
+                   ], 404 );
+            }
+        }
+        else
+        {
+            $user = User::findorfail($requset->id);
+            $user->is_deleted=1;
+            $user->save();
+            return redirect()->back();
+        }
+
+    }
+    public function restore (Request $requset){
+        if(str_contains(url()->current(),"api"))
+        {
+        $user = Auth::user();
+            if(!$user)
+            {
+             return response([
+              'message' => 'Unauthorized'
+             ], 401 );
+            }
+            $user = User::find($requset->id);
+            if($user)
+            {
+                $user->is_deleted=0;
+                $user->save();
+                return response(['message'=>'Restored!','user'=>$user] , 200);
+            }
+            else
+            {
+                return response([
+                    'message' => 'Not Found'
+                   ], 404 );
+            }
+        }
+        else
+        {
+            $user = User::findorfail($requset->id);
+            $user->is_deleted=0;
+            $user->save();
+            return redirect()->back();
+        }
+
     }
     public function Login(Request $request)
     {
